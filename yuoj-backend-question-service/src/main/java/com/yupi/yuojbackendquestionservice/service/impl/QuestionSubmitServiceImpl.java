@@ -17,10 +17,11 @@ import com.yupi.yuojbackendmodel.model.enums.QuestionSubmitLanguageEnum;
 import com.yupi.yuojbackendmodel.model.enums.QuestionSubmitStatusEnum;
 import com.yupi.yuojbackendmodel.model.vo.QuestionSubmitVO;
 import com.yupi.yuojbackendquestionservice.mapper.QuestionSubmitMapper;
+import com.yupi.yuojbackendquestionservice.rabbitmq.MyMessageProducer;
 import com.yupi.yuojbackendquestionservice.service.QuestionService;
 import com.yupi.yuojbackendquestionservice.service.QuestionSubmitService;
-import com.yupi.yuojbackendserviceclient.service.JudgeService;
-import com.yupi.yuojbackendserviceclient.service.UserService;
+import com.yupi.yuojbackendserviceclient.service.JudgeFeignClient;
+import com.yupi.yuojbackendserviceclient.service.UserFeignClient;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
@@ -43,11 +44,14 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     private QuestionService questionService;
 
     @Resource
-    private UserService userService;
+    private UserFeignClient userFeignClient;
 
     @Resource
     @Lazy
-    private JudgeService judgeService;
+    private JudgeFeignClient judgeFeignClient;
+
+    @Resource
+    private MyMessageProducer myMessageProducer;
 
 
     /**
@@ -86,9 +90,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "数据插入失败");
         }
         Long questionSubmitId = questionSubmit.getId();
-        CompletableFuture.runAsync(() -> {
-            judgeService.doJudge(questionSubmitId);
-        });
+
+        //发送消息
+        myMessageProducer.sendMessage("code_exchange","my_routingKey",String.valueOf(questionSubmitId));
+        // 异步执行判题服务
+//        CompletableFuture.runAsync(() -> {
+//            judgeFeignClient.doJudge(questionSubmitId);
+//        });
 
         return questionSubmitId;
     }
@@ -127,7 +135,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     public QuestionSubmitVO getQuestionSubmitVO(QuestionSubmit questionSubmit, User loginUser) {
         QuestionSubmitVO questionSubmitVO = QuestionSubmitVO.objToVo(questionSubmit);
         Long userId = loginUser.getId();
-        if (!userId.equals(questionSubmit.getUserId()) && !userService.isAdmin(loginUser)) {
+        if (!userId.equals(questionSubmit.getUserId()) && !userFeignClient.isAdmin(loginUser)) {
             questionSubmitVO.setCode(null);
         }
         return questionSubmitVO;

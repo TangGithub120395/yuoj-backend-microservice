@@ -35,7 +35,7 @@ import static com.yupi.yuojbackenduserservice.service.impl.UserServiceImpl.SALT;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/")
 @Slf4j
 public class UserController {
 

@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+#  config:
+#    import:
+#      - nacos:nacos-config-example.properties?refresh=true

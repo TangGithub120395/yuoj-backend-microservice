@@ -36,15 +36,24 @@ spring:
     multipart:
       # 大小限制
       max-file-size: 10MB
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+  rabbitmq:
+    host: localhost
+    port: 5672
+    password: guest
+    username: guest
 server:
   address: 0.0.0.0
   port: 8103
   servlet:
-    context-path: /api
+    context-path: /api/question
     # cookie 30 天过期
     session:
       cookie:
         max-age: 2592000
+        path: /api
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
@@ -57,3 +66,5 @@ mybatis-plus:
 #代码沙箱配置
 codeSandBox:
   type: "remote"
+knife4j:
+  enable: true
