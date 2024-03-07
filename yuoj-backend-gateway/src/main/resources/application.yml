@@ -1,7 +1,8 @@
 spring:
   cloud:
     nacos:
-      serverAddr: 127.0.0.1:8848
+      discovery:
+        server-addr: 127.0.0.1:8848
     gateway:
       routes:
         - id: yuoj-backend-user-service
