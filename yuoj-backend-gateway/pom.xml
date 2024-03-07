@@ -76,7 +76,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.yupi.yuojbackendgateway.YuojBackendGatewayApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
