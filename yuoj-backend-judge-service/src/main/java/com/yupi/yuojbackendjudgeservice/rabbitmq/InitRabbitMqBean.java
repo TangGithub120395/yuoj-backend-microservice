@@ -1,17 +1,10 @@
 package com.yupi.yuojbackendjudgeservice.rabbitmq;
 
-/**
- * @author tangzhen
- * @version 1.0
- * @date 2024/3/6 21:26
- */
-
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -22,11 +15,12 @@ import javax.annotation.PostConstruct;
 @Slf4j
 @Component
 public class InitRabbitMqBean {
+
     @Value("${spring.rabbitmq.host:localhost}")
     private String host;
 
     @PostConstruct
-    public void doInit(){
+    public void init() {
         try {
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(host);
@@ -39,9 +33,9 @@ public class InitRabbitMqBean {
             String queueName = "code_queue";
             channel.queueDeclare(queueName, true, false, false, null);
             channel.queueBind(queueName, EXCHANGE_NAME, "my_routingKey");
-            log.info("Bean的doInit方法执行,RabbitMq启动成功");
+            log.info("消息队列启动成功");
         } catch (Exception e) {
-            log.error("RabbitMq启动失败");
+            log.error("消息队列启动失败", e);
         }
     }
 }

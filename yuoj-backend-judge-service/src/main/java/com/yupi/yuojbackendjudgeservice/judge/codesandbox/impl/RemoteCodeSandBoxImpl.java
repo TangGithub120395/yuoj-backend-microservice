@@ -22,7 +22,7 @@ public class RemoteCodeSandBoxImpl implements CodeSandBox {
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         System.out.println("远程代码沙箱");
-        String url = "http://43.142.41.93:8111/executeCode";
+        String url = "http://8.137.79.249:8111/executeCode";
         String json = JSONUtil.toJsonStr(executeCodeRequest);
         String responseStr = HttpUtil
                 .createPost(url)

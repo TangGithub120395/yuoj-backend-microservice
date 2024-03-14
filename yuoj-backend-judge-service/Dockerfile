@@ -11,4 +11,4 @@ ADD target/yuoj-backend-judge-service-0.0.1-SNAPSHOT.jar .
 EXPOSE 8104
 
 # 启动命令
-ENTRYPOINT ["java","-jar","/app/yuoj-backend-judge-service-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]
+ENTRYPOINT ["java","-Xmx512m","-Xms512m","-jar","/app/yuoj-backend-judge-service-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]
